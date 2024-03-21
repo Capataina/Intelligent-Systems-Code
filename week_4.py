@@ -90,20 +90,24 @@ def perceptron(data, labels, params={}, hook=None):
     :param hook: An optional hook function that is called in each iteration of the algorithm.
     :return:
     """
-    T = params.get('T', 100)  # if T is not in params, default to 100
+    T = params.get('T', 250)  # if T is not in params, default to 100
     (d, n) = data.shape
 
     theta = np.zeros(2)
     theta_0 = 0
+    timesAdjusted = 0
 
     for _ in range(T):
         for i in range(n):
             x = data[:, i]
             y = labels[:, i]
 
-            if y * ((np.dot(theta, x) + theta_0) <= 0):
+            if (y * (np.dot(theta, x) + theta_0)) <= 0:
                 theta += x * y
                 theta_0 += y
+                timesAdjusted += 1
+                # print("adjusting")
+                # print(timesAdjusted)
 
             if hook:
                 hook((theta, theta_0))
@@ -186,7 +190,7 @@ if __name__ == '__main__':
 
     # Run the RLC or Perceptron: (uncomment the following lines to call the learning algorithms)
     # theta, theta_0 = random_linear_classifier(X, y, {"k": 100}, hook=None)
-    theta, theta_0 = perceptron(X, y, {"T": 100}, hook=None)
+    theta, theta_0 = perceptron(X, y, {"T": 250}, hook=None)
     # Plot the returned separator:
     plot_separator(ax, theta, theta_0)
 
